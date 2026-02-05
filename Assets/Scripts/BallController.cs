@@ -1,5 +1,6 @@
 using UnityEngine;
 using TMPro;
+using System;
 
 public class BallController : MonoBehaviour
 {
@@ -33,19 +34,40 @@ public class BallController : MonoBehaviour
         rightScoreText.text = "Score: " + rightScore.ToString();
     }
 
+    void ResetScore()
+    {
+        leftScore = 0;
+        SetLeftScoreText();
+        rightScore = 0;
+        SetRightScoreText();
+    }
+
     void OnTriggerEnter(Collider other) 
     {
         if (other.gameObject.CompareTag("Goal"))
         {
             if (transform.position.x < 0)
             {
-                leftScore++;
-                SetLeftScoreText();
-            } else
-            {
                 rightScore++;
                 SetRightScoreText();
+                Debug.Log("Right scored! (" + leftScore.ToString() + ":" + rightScore.ToString());
+            } else
+            {
+                leftScore++;
+                SetLeftScoreText();
+                Debug.Log("Left scored! (" + leftScore.ToString() + ":" + rightScore.ToString());
             }
+
+            if (leftScore >= 11)
+            {
+                Debug.Log("Game Over, left paddle wins!");
+                ResetScore();
+            } else if (rightScore >= 11)
+            {
+                Debug.Log("Game Over, right paddle wins!");
+                ResetScore();
+            }
+
             transform.position = new Vector3(0f, 0.26f, 0f);
         }
     }
