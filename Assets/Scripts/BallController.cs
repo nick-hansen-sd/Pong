@@ -1,17 +1,20 @@
 using UnityEngine;
 using TMPro;
 using System;
+using UnityEngine.AI;
 
 public class BallController : MonoBehaviour
 {
     
     public float speed = 0f;
+    public float maxSpeed = 0f;
     private Rigidbody rb;
     public TextMeshProUGUI leftScoreText;
     public TextMeshProUGUI rightScoreText;
     private int leftScore;
     private int rightScore;
     private float defaultSpeed;
+    private Renderer rend;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -21,12 +24,16 @@ public class BallController : MonoBehaviour
         defaultSpeed = speed;
         rb = GetComponent<Rigidbody>();
         rb.linearVelocity = transform.right * -speed;
-
+        rend = GetComponent<Renderer>();
     }
 
     void FixedUpdate()
     {
         rb.linearVelocity = rb.linearVelocity.normalized * speed;
+        if (speed >= maxSpeed)
+        {
+            speed = maxSpeed; //Limits how fast the ball can go
+        }
     }
 
     void SetLeftScoreText()
@@ -52,6 +59,8 @@ public class BallController : MonoBehaviour
         if (collision.gameObject.CompareTag("Player"))
         {
             speed = speed * 1.1f;
+            //Change ball to a random color after each paddle collision
+            rend.material.color = new Color(UnityEngine.Random.value, UnityEngine.Random.value, UnityEngine.Random.value);
         }
     }
 
