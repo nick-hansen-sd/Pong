@@ -23,7 +23,13 @@ public class BallController : MonoBehaviour
         rightScore = 0;
         defaultSpeed = speed;
         rb = GetComponent<Rigidbody>();
-        rb.linearVelocity = transform.right * -speed;
+
+        //Start ball movement facing left at a random angle
+        float maxAngle = 10f;
+        float randomAngle = UnityEngine.Random.Range(-maxAngle, maxAngle);
+        Vector3 direction = Quaternion.AngleAxis(randomAngle, Vector3.up) * -transform.right;
+        rb.linearVelocity = direction * speed;
+
         rend = GetComponent<Renderer>();
     }
 
@@ -80,18 +86,32 @@ public class BallController : MonoBehaviour
                 Debug.Log("Left scored! (" + leftScore.ToString() + ":" + rightScore.ToString());
             }
 
+            bool gameReset = false;
             if (leftScore >= 11)
             {
                 Debug.Log("Game Over, left paddle wins!");
                 ResetScore();
+                gameReset = true;
             } else if (rightScore >= 11)
             {
                 Debug.Log("Game Over, right paddle wins!");
                 ResetScore();
+                gameReset = true;
             }
-
+            
             transform.position = new Vector3(0f, 0.26f, 0f);
             speed = defaultSpeed;
+            
+            if (gameReset)
+            {
+                //Start ball movement facing left at a random angle
+                float maxAngle = 10f;
+                float randomAngle = UnityEngine.Random.Range(-maxAngle, maxAngle);
+                Vector3 direction = Quaternion.AngleAxis(randomAngle, Vector3.up) * -transform.right;
+                rb.linearVelocity = direction * speed;
+            }
+
+            
 
         }
     }
