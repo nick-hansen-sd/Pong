@@ -5,23 +5,28 @@ using System;
 public class BallController : MonoBehaviour
 {
     
-    public float thrust = 0f;
+    public float speed = 0f;
+    private Rigidbody rb;
     public TextMeshProUGUI leftScoreText;
     public TextMeshProUGUI rightScoreText;
     private int leftScore;
     private int rightScore;
+    private float defaultSpeed;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         leftScore = 0;
         rightScore = 0;
+        defaultSpeed = speed;
+        rb = GetComponent<Rigidbody>();
+        rb.linearVelocity = transform.right * -speed;
+
     }
 
-    // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
-        GetComponent<Rigidbody>().AddForce(transform.right * -thrust);
+        rb.linearVelocity = rb.linearVelocity.normalized * speed;
     }
 
     void SetLeftScoreText()
@@ -40,6 +45,14 @@ public class BallController : MonoBehaviour
         SetLeftScoreText();
         rightScore = 0;
         SetRightScoreText();
+    }
+
+    void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            speed = speed * 1.1f;
+        }
     }
 
     void OnTriggerEnter(Collider other) 
@@ -69,6 +82,8 @@ public class BallController : MonoBehaviour
             }
 
             transform.position = new Vector3(0f, 0.26f, 0f);
+            speed = defaultSpeed;
+
         }
     }
 
