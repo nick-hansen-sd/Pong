@@ -31,13 +31,13 @@ public class NewMonoBehaviourScript : MonoBehaviour
             transform.position -= new Vector3(0f, 0f, paddleSpeed) * Time.deltaTime;
         }
 
-        Vector3 up = Vector3.up;
-        Quaternion testRotation = Quaternion.Euler(60f, 0f, 0f);
+        // Vector3 up = Vector3.up;
+        // Quaternion testRotation = Quaternion.Euler(60f, 0f, 0f);
 
-        Vector3 rotatedVector = testRotation * up;
+        // Vector3 rotatedVector = testRotation * up;
 
-        Quaternion otherRotation = Quaternion.Euler(-60f, 0f, 0f);
-        Vector3 otherRotatedVector = otherRotation * up;
+        // Quaternion otherRotation = Quaternion.Euler(-60f, 0f, 0f);
+        // Vector3 otherRotatedVector = otherRotation * up;
 
     }
 }
