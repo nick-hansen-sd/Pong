@@ -4,8 +4,9 @@ using UnityEngine.InputSystem;
 public class NewMonoBehaviourScript : MonoBehaviour
 {
 
-    public float paddleSpeed = 1f;
-    public float maxZ = 5f;
+    public float paddleSpeed = 10f;
+    public float maxZ = 3.75f;
+    public float minZ = -3.75f;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -13,22 +14,23 @@ public class NewMonoBehaviourScript : MonoBehaviour
         
     }
 
-    // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         
         if ((Keyboard.current.wKey.isPressed && transform.position.x < 0) || (Keyboard.current.upArrowKey.isPressed && transform.position.x > 0))
         {
             Vector3 newPosition = transform.position + new Vector3(0f, 0f, paddleSpeed) * Time.deltaTime;
-            newPosition.z = Mathf.Clamp(newPosition.z, -10f, maxZ);
+            newPosition.z = Mathf.Clamp(newPosition.z, minZ, maxZ);
 
             transform.position = newPosition;
-            //transform.position += new Vector3(0f, 0f, paddleSpeed) * Time.deltaTime;
         }
 
-        if ((Keyboard.current.sKey.isPressed && transform.position.x < 0) || (Keyboard.current.downArrowKey.isPressed && transform.position.x > 0))
+        if ((Keyboard.current.sKey.isPressed && transform.position.x < 0) ||(Keyboard.current.downArrowKey.isPressed && transform.position.x > 0))
         {
-            transform.position -= new Vector3(0f, 0f, paddleSpeed) * Time.deltaTime;
+            Vector3 newPosition = transform.position - new Vector3(0f, 0f, paddleSpeed) * Time.deltaTime;
+            newPosition.z = Mathf.Clamp(newPosition.z, minZ, maxZ);
+
+            transform.position = newPosition;
         }
 
         // Vector3 up = Vector3.up;
