@@ -8,12 +8,6 @@ public class NewMonoBehaviourScript : MonoBehaviour
     public float maxZ = 3.75f;
     public float minZ = -3.75f;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
-
     void FixedUpdate()
     {
         
@@ -32,14 +26,6 @@ public class NewMonoBehaviourScript : MonoBehaviour
 
             transform.position = newPosition;
         }
-
-        // Vector3 up = Vector3.up;
-        // Quaternion testRotation = Quaternion.Euler(60f, 0f, 0f);
-
-        // Vector3 rotatedVector = testRotation * up;
-
-        // Quaternion otherRotation = Quaternion.Euler(-60f, 0f, 0f);
-        // Vector3 otherRotatedVector = otherRotation * up;
 
     }
 }
