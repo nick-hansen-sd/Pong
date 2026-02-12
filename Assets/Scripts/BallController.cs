@@ -16,7 +16,8 @@ public class BallController : MonoBehaviour
     private float defaultSpeed;
     private Renderer rend;
     AudioSource audioSource;
-    public AudioClip impact;
+    public AudioClip paddleImpact;
+    public AudioClip wallImpact;
     public GameObject powerUp1;
     public GameObject powerUp2;
     private Vector3 defaultSize;
@@ -30,6 +31,7 @@ public class BallController : MonoBehaviour
         rightScore = 0;
         defaultSpeed = speed;
         rb = GetComponent<Rigidbody>();
+        audioSource = GetComponent<AudioSource>();
         defaultSize = transform.localScale; //Save default ball size to be reset after scoring
 
         //Start ball movement facing left at a random angle
@@ -39,11 +41,6 @@ public class BallController : MonoBehaviour
         rb.linearVelocity = direction * speed;
 
         rend = GetComponent<Renderer>();
-    }
-
-    void Awake()
-    {
-        audioSource = GetComponent<AudioSource>();
     }
 
     void FixedUpdate()
@@ -83,7 +80,7 @@ public class BallController : MonoBehaviour
             audioSource.pitch = audioSource.pitch * 1.01f;
             //Change ball to a random color after each paddle collision
             rend.material.color = new Color(UnityEngine.Random.value, UnityEngine.Random.value, UnityEngine.Random.value);
-            audioSource.PlayOneShot(impact);
+            audioSource.PlayOneShot(paddleImpact);
 
             //Attempt to spawn power-up after every paddle collision
             System.Random rng = new System.Random();
@@ -97,6 +94,9 @@ public class BallController : MonoBehaviour
                     powerUp2.SetActive(true);
                 }
             }
+        } else if (collision.gameObject.CompareTag("Wall"))
+        {
+            audioSource.PlayOneShot(wallImpact);
         }
     }
 
@@ -109,6 +109,7 @@ public class BallController : MonoBehaviour
         } else if (other.gameObject.CompareTag("SmallBall"))
         {
             transform.localScale *= 0.5f; //Shrink ball by 50%
+            powerUp2.SetActive(false);
         } else if (other.gameObject.CompareTag("Goal"))
         {
             transform.localScale = defaultSize;
