@@ -17,6 +17,9 @@ public class BallController : MonoBehaviour
     private Renderer rend;
     AudioSource audioSource;
     public AudioClip impact;
+    public GameObject powerUp1;
+    private int powerUpSpawnAttempt;
+    public int powerUpSpawnChance = 10; //Chance to spawn power-up is 1 in powerUpSpawnChance
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -78,13 +81,29 @@ public class BallController : MonoBehaviour
             //Change ball to a random color after each paddle collision
             rend.material.color = new Color(UnityEngine.Random.value, UnityEngine.Random.value, UnityEngine.Random.value);
             audioSource.PlayOneShot(impact);
+
+            //Attempt to spawn power-up after every paddle collision
+            System.Random rng = new System.Random();
+            powerUpSpawnAttempt = rng.Next(0, powerUpSpawnChance + 1);
+            if (powerUpSpawnAttempt == powerUpSpawnChance && !powerUp1.activeInHierarchy)
+            {
+                powerUp1.SetActive(true);
+            }
         }
     }
 
     void OnTriggerEnter(Collider other) 
     {
-        if (other.gameObject.CompareTag("Goal"))
+        if (other.gameObject.CompareTag("SpeedBoost"))
         {
+            speed = speed * 2;
+            powerUp1.SetActive(false);
+        } else if (other.gameObject.CompareTag("Goal"))
+        {
+            if (powerUp1.activeInHierarchy)
+            {
+                powerUp1.SetActive(false);
+            }
             if (transform.position.x < 0)
             {
                 rightScore++;
