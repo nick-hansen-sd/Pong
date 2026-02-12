@@ -15,6 +15,8 @@ public class BallController : MonoBehaviour
     private int rightScore;
     private float defaultSpeed;
     private Renderer rend;
+    AudioSource audioSource;
+    public AudioClip impact;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -31,6 +33,11 @@ public class BallController : MonoBehaviour
         rb.linearVelocity = direction * speed;
 
         rend = GetComponent<Renderer>();
+    }
+
+    void Awake()
+    {
+        audioSource = GetComponent<AudioSource>();
     }
 
     void FixedUpdate()
@@ -65,8 +72,10 @@ public class BallController : MonoBehaviour
         if (collision.gameObject.CompareTag("Player"))
         {
             speed = speed * 1.1f;
+            audioSource.pitch = audioSource.pitch * 1.01f;
             //Change ball to a random color after each paddle collision
             rend.material.color = new Color(UnityEngine.Random.value, UnityEngine.Random.value, UnityEngine.Random.value);
+            audioSource.PlayOneShot(impact);
         }
     }
 
@@ -79,11 +88,13 @@ public class BallController : MonoBehaviour
                 rightScore++;
                 SetRightScoreText();
                 Debug.Log("Right scored! (" + leftScore.ToString() + ":" + rightScore.ToString());
+                audioSource.pitch = 1;
             } else
             {
                 leftScore++;
                 SetLeftScoreText();
                 Debug.Log("Left scored! (" + leftScore.ToString() + ":" + rightScore.ToString());
+                audioSource.pitch = 1;
             }
 
             bool gameReset = false;
@@ -109,6 +120,7 @@ public class BallController : MonoBehaviour
                 float randomAngle = UnityEngine.Random.Range(-maxAngle, maxAngle);
                 Vector3 direction = Quaternion.AngleAxis(randomAngle, Vector3.up) * -transform.right;
                 rb.linearVelocity = direction * speed;
+                audioSource.pitch = 1;
             }
 
             
