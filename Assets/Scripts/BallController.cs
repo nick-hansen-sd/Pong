@@ -65,6 +65,8 @@ public class BallController : MonoBehaviour
         SetLeftScoreText();
         rightScore = 0;
         SetRightScoreText();
+        leftScoreText.color = Color.white;
+        rightScoreText.color = Color.white;
     }
 
     void OnCollisionEnter(Collision collision)
@@ -95,6 +97,29 @@ public class BallController : MonoBehaviour
                 SetLeftScoreText();
                 Debug.Log("Left scored! (" + leftScore.ToString() + ":" + rightScore.ToString());
                 audioSource.pitch = 1;
+            }
+
+            //Change score text color based on score
+            if (leftScore < 7)
+            {
+                leftScoreText.color = Color.white;
+            } else if (leftScore >= 7 && leftScore < 10)
+            {
+                leftScoreText.color = Color.yellow;
+            } else if (leftScore >= 10)
+            {
+                leftScoreText.color = Color.red;
+            }
+
+            if (rightScore < 7)
+            {
+                rightScoreText.color = Color.white;
+            } else if (rightScore >= 7 && rightScore < 10)
+            {
+                rightScoreText.color = Color.yellow;
+            } else if (rightScore >= 10)
+            {
+                rightScoreText.color = Color.red;
             }
 
             bool gameReset = false;
