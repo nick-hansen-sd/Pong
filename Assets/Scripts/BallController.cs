@@ -18,6 +18,8 @@ public class BallController : MonoBehaviour
     AudioSource audioSource;
     public AudioClip impact;
     public GameObject powerUp1;
+    public GameObject powerUp2;
+    private Vector3 defaultSize;
     private int powerUpSpawnAttempt;
     public int powerUpSpawnChance = 10; //Chance to spawn power-up is 1 in powerUpSpawnChance
     
@@ -28,6 +30,7 @@ public class BallController : MonoBehaviour
         rightScore = 0;
         defaultSpeed = speed;
         rb = GetComponent<Rigidbody>();
+        defaultSize = transform.localScale; //Save default ball size to be reset after scoring
 
         //Start ball movement facing left at a random angle
         float maxAngle = 10f;
@@ -85,9 +88,14 @@ public class BallController : MonoBehaviour
             //Attempt to spawn power-up after every paddle collision
             System.Random rng = new System.Random();
             powerUpSpawnAttempt = rng.Next(0, powerUpSpawnChance + 1);
-            if (powerUpSpawnAttempt == powerUpSpawnChance && !powerUp1.activeInHierarchy)
+            if (powerUpSpawnAttempt == powerUpSpawnChance && !powerUp1.activeInHierarchy && !powerUp2.activeInHierarchy)
             {
-                powerUp1.SetActive(true);
+                if (rng.Next(0, 2) == 0) {
+                    powerUp1.SetActive(true);
+                } else
+                {
+                    powerUp2.SetActive(true);
+                }
             }
         }
     }
@@ -96,13 +104,21 @@ public class BallController : MonoBehaviour
     {
         if (other.gameObject.CompareTag("SpeedBoost"))
         {
-            speed = speed * 2;
+            speed = speed * 2; //Double ball speed
             powerUp1.SetActive(false);
+        } else if (other.gameObject.CompareTag("SmallBall"))
+        {
+            transform.localScale *= 0.5f; //Shrink ball by 50%
         } else if (other.gameObject.CompareTag("Goal"))
         {
+            transform.localScale = defaultSize;
             if (powerUp1.activeInHierarchy)
             {
                 powerUp1.SetActive(false);
+            }
+            if (powerUp2.activeInHierarchy)
+            {
+                powerUp2.SetActive(false);
             }
             if (transform.position.x < 0)
             {
@@ -165,6 +181,7 @@ public class BallController : MonoBehaviour
                 Vector3 direction = Quaternion.AngleAxis(randomAngle, Vector3.up) * -transform.right;
                 rb.linearVelocity = direction * speed;
                 audioSource.pitch = 1;
+                transform.localScale = defaultSize;
             }
 
             
