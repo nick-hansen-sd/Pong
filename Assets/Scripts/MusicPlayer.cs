@@ -30,7 +30,6 @@ public class BackgroundMusic : MonoBehaviour
             {
                 mute = false;
                 musicAudioSource.enabled = true;
-                musicAudioSource.PlayOneShot(bgMusic);
             }
         }
     }
